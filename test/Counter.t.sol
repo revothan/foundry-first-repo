@@ -1,24 +1,27 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-import {Test, console} from "forge-std/Test.sol";
-import {Counter} from "../src/Counter.sol";
+contract Counter {
+    uint256 private count;
 
-contract CounterTest is Test {
-    Counter public counter;
+    // Event to notify when the count has changed
+    event CountChanged(uint256 newCount);
 
-    function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
+    // Function to get the current count
+    function getCount() public view returns (uint256) {
+        return count;
     }
 
-    function test_Increment() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
+    // Function to increment the count
+    function increment() public {
+        count += 1;
+        emit CountChanged(count);
     }
 
-    function testFuzz_SetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    // Function to decrement the count
+    function decrement() public {
+        require(count > 0, "Counter: cannot decrement below zero");
+        count -= 1;
+        emit CountChanged(count);
     }
 }
